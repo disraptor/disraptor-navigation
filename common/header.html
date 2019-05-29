@@ -1,0 +1,31 @@
+<script type="text/discourse-plugin" version="0.8">
+    const { iconNode } = require('discourse-common/lib/icon-library');
+
+    // This renames the reference to the “bars” icon to “disraptor-bars-icon”.
+    // This way, we can reference the “bars” icon with a different name (i.e. disraptor-bars-icon).
+    api.replaceIcon('disraptor-bars-icon', 'bars')
+
+    // This renames the reference to the “fab-discourse” to “bars”.
+    // Since the “fab-discourse” is originally used for Discourse’s main navigation, it will now use the “bars” icon.
+    api.replaceIcon('bars', 'fab-discourse');
+
+    // header-contents:after inserts after div.contents.clearfix
+    api.decorateWidget('header-icons:after', function (helper) {
+        return helper.h(
+            'li.header-dropdown-toggle',
+            [
+                helper.h(
+                    'a#toggle-disraptor-menu.icon.btn-flat',
+                    {
+                        href: '#nav',
+                        title: 'Disraptor Nav',
+                        attributes: {
+                            onClick: 'console.log("hello")'
+                        }
+                    },
+                    iconNode('disraptor-bars-icon')
+                )
+            ]
+        );
+    });
+</script>
