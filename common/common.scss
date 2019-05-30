@@ -2,6 +2,10 @@
   display: none;
 }
 
-.toggle-disraptor-menu[aria-expanded='true'] ~ .disraptor-menu {
+.toggle-disraptor-menu[aria-expanded='true'] ~ .menu-panel {
   display: initial;
+}
+
+.toggle-disraptor-menu {
+  box-sizing: content-box;
 }

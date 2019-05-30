@@ -4,7 +4,7 @@
 
     // This renames the reference to the “bars” icon to “disraptor-bars-icon”.
     // This way, we can reference the “bars” icon with a different name (i.e. disraptor-bars-icon).
-    api.replaceIcon('disraptor-bars-icon', 'bars')
+    api.replaceIcon('disraptor-bars', 'bars')
 
     // This renames the reference to the “fab-discourse” to “bars”.
     // Since the “fab-discourse” is originally used for Discourse’s main navigation, it will now use the “bars” icon.
@@ -31,7 +31,7 @@
             'li.header-dropdown-toggle',
             [
                 h(
-                    'button#toggle-disraptor-menu.icon.btn-flat',
+                    'button.toggle-disraptor-menu.icon.btn-flat',
                     {
                         type: 'button',
                         onclick: toggleDisraptorNav,
@@ -40,11 +40,16 @@
                             'aria-expanded': 'false'
                         }
                     },
-                    iconNode('disraptor-bars-icon')
+                    iconNode('disraptor-bars')
                 ),
                 h(
-                    'ul.disraptor-menu',
-                    getDisraptorNavItems()
+                    'div.menu-panel',
+                    [
+                        h(
+                            'ul.disraptor-menu',
+                            getDisraptorNavItems()
+                        )
+                    ]
                 )
             ]
         );
