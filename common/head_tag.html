@@ -42,23 +42,32 @@
                     },
                     iconNode('disraptor-bars')
                 ),
-                h(
-                    'div.menu-panel',
-                    {
-                        attributes: {
-                            'data-max-width', '320'
-                        }
-                    },
-                    [
-                        h(
-                            'div.panel-body'
-                            [
-                                h('ul.disraptor-menu', getDisraptorNavItems())
-                            ]
-                        )
-                    ]
-                )
+                getDisraptorNav()
             ]
+        );
+    }
+
+    function getDisraptorNav() {
+        return h(
+            'div.disraptor-panel',
+            h(
+                'div.menu-panel',
+                {
+                    attributes: {
+                        'data-max-width': '320'
+                    }
+                },
+                h(
+                    'div.panel-body', // Discourse’s menus have .panel-body here, but that messes with the menu’s height right now
+                    h(
+                        'div.panel-body-contents.clearfix',
+                        h(
+                            'ul.disraptor-menu',
+                            getDisraptorNavItems()
+                        )
+                    )
+                )
+            )
         );
     }
 
@@ -66,9 +75,7 @@
         return disraptorNavItems.map(item => {
             return h(
                 'li',
-                [
-                    h('a', { href: item.href }, item.text)
-                ]
+                h('a', { href: item.href }, item.text)
             );
         });
     }

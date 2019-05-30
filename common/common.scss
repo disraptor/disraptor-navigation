@@ -1,11 +1,20 @@
-.toggle-disraptor-menu[aria-expanded='false'] ~ .menu-panel {
+.toggle-disraptor-menu[aria-expanded='false'] ~ .disraptor-panel {
   display: none;
 }
 
-.toggle-disraptor-menu[aria-expanded='true'] ~ .menu-panel {
+.toggle-disraptor-menu[aria-expanded='true'] ~ .disraptor-panel {
   display: initial;
 }
 
 .toggle-disraptor-menu {
   box-sizing: content-box;
+}
+
+// The following rulesets are necessary to avoid conflicts with some Discourse logic
+.disraptor-panel .menu-panel {
+    height: auto !important;
+}
+
+.disraptor-panel .panel-body {
+    position: static !important;
 }
