@@ -1,0 +1,7 @@
+.disraptor-menu {
+  display: none;
+}
+
+.toggle-disraptor-menu[aria-expanded='true'] ~ .disraptor-menu {
+  display: initial;
+}

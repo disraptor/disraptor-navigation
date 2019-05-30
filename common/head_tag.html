@@ -1,4 +1,5 @@
 <script type="text/discourse-plugin" version="0.8">
+    const { h } = require('virtual-dom');
     const { iconNode } = require('discourse-common/lib/icon-library');
 
     // This renames the reference to the “bars” icon to “disraptor-bars-icon”.
@@ -10,22 +11,58 @@
     api.replaceIcon('bars', 'fab-discourse');
 
     // header-contents:after inserts after div.contents.clearfix
-    api.decorateWidget('header-icons:after', function (helper) {
-        return helper.h(
+    api.decorateWidget('header-icons:after', function () {
+        return createHeaderIcon();
+    });
+
+    const disraptorNavItems = [
+        {
+            text: 'Home',
+            href: '/'
+        },
+        {
+            text: 'Test',
+            href: '/tira9-client-web/tasks'
+        }
+    ];
+
+    function createHeaderIcon() {
+        return h(
             'li.header-dropdown-toggle',
             [
-                helper.h(
-                    'a#toggle-disraptor-menu.icon.btn-flat',
+                h(
+                    'button#toggle-disraptor-menu.icon.btn-flat',
                     {
-                        href: '#nav',
-                        title: 'Disraptor Nav',
+                        type: 'button',
+                        onclick: toggleDisraptorNav,
                         attributes: {
-                            onClick: 'console.log("hello")'
+                            'aria-label': 'Disraptor Nav',
+                            'aria-expanded': 'false'
                         }
                     },
                     iconNode('disraptor-bars-icon')
+                ),
+                h(
+                    'ul.disraptor-menu',
+                    getDisraptorNavItems()
                 )
             ]
         );
-    });
+    }
+
+    function getDisraptorNavItems() {
+        return disraptorNavItems.map(item => {
+            return h(
+                'li',
+                [
+                    h('a', { href: item.href }, item.text)
+                ]
+            );
+        });
+    }
+
+    function toggleDisraptorNav(event) {
+        const isExpanded = event.currentTarget.getAttribute('aria-expanded') === 'true';
+        event.currentTarget.setAttribute('aria-expanded', !isExpanded);
+    }
 </script>
