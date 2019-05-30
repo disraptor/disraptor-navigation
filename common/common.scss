@@ -1,4 +1,4 @@
-.disraptor-menu {
+.toggle-disraptor-menu[aria-expanded='false'] ~ .menu-panel {
   display: none;
 }
 

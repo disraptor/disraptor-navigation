@@ -44,10 +44,17 @@
                 ),
                 h(
                     'div.menu-panel',
+                    {
+                        attributes: {
+                            'data-max-width', '320'
+                        }
+                    },
                     [
                         h(
-                            'ul.disraptor-menu',
-                            getDisraptorNavItems()
+                            'div.panel-body'
+                            [
+                                h('ul.disraptor-menu', getDisraptorNavItems())
+                            ]
                         )
                     ]
                 )
