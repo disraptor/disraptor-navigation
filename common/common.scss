@@ -11,10 +11,11 @@
 }
 
 // The following rulesets are necessary to avoid conflicts with some Discourse logic
-.disraptor-panel .menu-panel {
-    height: auto !important;
+.disraptor-panel .menu-panel,
+.disraptor-panel .panel-body {
+  height: auto !important;
 }
 
 .disraptor-panel .panel-body {
-    position: static !important;
+  position: static !important;
 }
