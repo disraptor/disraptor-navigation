@@ -2,8 +2,19 @@
     const { h } = require('virtual-dom');
     const { iconNode } = require('discourse-common/lib/icon-library');
 
-    // This renames the reference to the “bars” icon to “disraptor-bars-icon”.
-    // This way, we can reference the “bars” icon with a different name (i.e. disraptor-bars-icon).
+    const disraptorMenuItems = [
+        {
+            text: 'Home',
+            href: '/'
+        },
+        {
+            text: 'Tasks',
+            href: '/tira9-client-web/tasks'
+        }
+    ];
+
+    // This renames the reference to the “bars” icon to “disraptor-bars”.
+    // This way, we can reference the “bars” icon with a different name (i.e. “disraptor-bars”).
     api.replaceIcon('disraptor-bars', 'bars')
 
     // This renames the reference to the “fab-discourse” to “bars”.
@@ -12,42 +23,53 @@
 
     // header-contents:after inserts after div.contents.clearfix
     api.decorateWidget('header-icons:after', function () {
-        return createHeaderIcon();
+        return getDisraptorMenuWrapper();
     });
 
-    const disraptorNavItems = [
-        {
-            text: 'Home',
-            href: '/'
-        },
-        {
-            text: 'Test',
-            href: '/tira9-client-web/tasks'
+    // Closes the Disraptor menu when clicking outside.
+    document.addEventListener('mousedown', function (event) {
+        if (event.buttons !== 1) {
+            return;
         }
-    ];
 
-    function createHeaderIcon() {
+        const clickedOnToggle = event.target.closest('.disraptor-menu-toggle') !== null;
+        if (clickedOnToggle) {
+            return;
+        }
+
+        const clickedOnNav = event.target.closest('.disraptor-panel') !== null;
+        if (!clickedOnNav) {
+            const disraptorMenuToggle = document.querySelector('.disraptor-menu-toggle');
+            disraptorMenuToggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    function getDisraptorMenuWrapper() {
         return h(
             'li.header-dropdown-toggle',
             [
-                h(
-                    'button.toggle-disraptor-menu.icon.btn-flat',
-                    {
-                        type: 'button',
-                        onclick: toggleDisraptorNav,
-                        attributes: {
-                            'aria-label': 'Disraptor Nav',
-                            'aria-expanded': 'false'
-                        }
-                    },
-                    iconNode('disraptor-bars')
-                ),
-                getDisraptorNav()
+                getDisraptorMenuToggle(),
+                getDisraptorMenu()
             ]
         );
     }
 
-    function getDisraptorNav() {
+    function getDisraptorMenuToggle() {
+        return h(
+            'button.disraptor-menu-toggle.icon.btn-flat',
+            {
+                type: 'button',
+                onclick: toggleDisraptorMenu,
+                attributes: {
+                    'aria-label': 'Disraptor Nav',
+                    'aria-expanded': 'false'
+                }
+            },
+            iconNode('disraptor-bars')
+        );
+    }
+
+    function getDisraptorMenu() {
         return h(
             'div.disraptor-panel',
             h(
@@ -58,12 +80,12 @@
                     }
                 },
                 h(
-                    'div.panel-body', // Discourse’s menus have .panel-body here, but that messes with the menu’s height right now
+                    'div.panel-body',
                     h(
                         'div.panel-body-contents.clearfix',
                         h(
                             'ul.disraptor-menu',
-                            getDisraptorNavItems()
+                            disraptorMenuItems.map(item => h('li', h('a', { href: item.href }, item.text)))
                         )
                     )
                 )
@@ -71,16 +93,7 @@
         );
     }
 
-    function getDisraptorNavItems() {
-        return disraptorNavItems.map(item => {
-            return h(
-                'li',
-                h('a', { href: item.href }, item.text)
-            );
-        });
-    }
-
-    function toggleDisraptorNav(event) {
+    function toggleDisraptorMenu(event) {
         const isExpanded = event.currentTarget.getAttribute('aria-expanded') === 'true';
         event.currentTarget.setAttribute('aria-expanded', !isExpanded);
     }

@@ -1,12 +1,12 @@
-.toggle-disraptor-menu[aria-expanded='false'] ~ .disraptor-panel {
+.disraptor-menu-toggle[aria-expanded='false'] ~ .disraptor-panel {
   display: none;
 }
 
-.toggle-disraptor-menu[aria-expanded='true'] ~ .disraptor-panel {
+.disraptor-menu-toggle[aria-expanded='true'] ~ .disraptor-panel {
   display: initial;
 }
 
-.toggle-disraptor-menu {
+.disraptor-menu-toggle {
   box-sizing: content-box;
 }
 
