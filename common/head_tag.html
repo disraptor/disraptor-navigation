@@ -21,80 +21,47 @@
     // Since the “fab-discourse” is originally used for Discourse’s main navigation, it will now use the “bars” icon.
     api.replaceIcon('bars', 'fab-discourse');
 
-    // header-contents:after inserts after div.contents.clearfix
-    api.decorateWidget('header-icons:after', function () {
-        return getDisraptorMenuWrapper();
-    });
+    api.createWidget('disraptor-menu', {
+        tagName: 'div.disraptor-panel',
 
-    // Closes the Disraptor menu when clicking outside.
-    document.addEventListener('mousedown', function (event) {
-        if (event.buttons !== 1) {
-            return;
-        }
+        panelContents() {
+            return h(
+                'ul.disraptor-menu',
+                disraptorMenuItems.map(item => h('li', h('a', { href: item.href }, item.text)))
+            );
+        },
 
-        const clickedOnToggle = event.target.closest('.disraptor-menu-toggle') !== null;
-        if (clickedOnToggle) {
-            return;
-        }
+        html() {
+            return this.attach('menu-panel', {
+                contents: () => this.panelContents()
+            });
+        },
 
-        const clickedOnNav = event.target.closest('.disraptor-panel') !== null;
-        if (!clickedOnNav) {
-            const disraptorMenuToggle = document.querySelector('.disraptor-menu-toggle');
-            disraptorMenuToggle.setAttribute('aria-expanded', 'false');
+        clickOutside() {
+            this.sendWidgetAction('toggleDisraptorMenu');
         }
     });
 
-    function getDisraptorMenuWrapper() {
-        return h(
-            'li.header-dropdown-toggle',
-            [
-                getDisraptorMenuToggle(),
-                getDisraptorMenu()
-            ]
-        );
-    }
+    api.decorateWidget('header-icons:after', function(helper) {
+        const headerState = helper.widget.parentWidget.state;
 
-    function getDisraptorMenuToggle() {
-        return h(
-            'button.disraptor-menu-toggle.icon.btn-flat',
-            {
-                type: 'button',
-                onclick: toggleDisraptorMenu,
-                attributes: {
-                    'aria-label': 'Disraptor Nav',
-                    'aria-expanded': 'false'
-                }
-            },
-            iconNode('disraptor-bars')
-        );
-    }
+        let contents = [];
+        contents.push(helper.attach('header-dropdown', {
+          title: 'disraptor-menu',
+          icon: 'disraptor-bars',
+          active: headerState.disraptorMenuVisible,
+          iconId: 'toggle-disraptor-menu',
+          action: 'toggleDisraptorMenu',
+        }));
 
-    function getDisraptorMenu() {
-        return h(
-            'div.disraptor-panel',
-            h(
-                'div.menu-panel',
-                {
-                    attributes: {
-                        'data-max-width': '320'
-                    }
-                },
-                h(
-                    'div.panel-body',
-                    h(
-                        'div.panel-body-contents.clearfix',
-                        h(
-                            'ul.disraptor-menu',
-                            disraptorMenuItems.map(item => h('li', h('a', { href: item.href }, item.text)))
-                        )
-                    )
-                )
-            )
-        );
-    }
+        if (headerState.disraptorMenuVisible) {
+            contents.push(helper.attach('disraptor-menu'));
+        }
 
-    function toggleDisraptorMenu(event) {
-        const isExpanded = event.currentTarget.getAttribute('aria-expanded') === 'true';
-        event.currentTarget.setAttribute('aria-expanded', !isExpanded);
-    }
+        return contents;
+    });
+
+    api.attachWidgetAction('header', 'toggleDisraptorMenu', function() {
+        this.state.disraptorMenuVisible = !this.state.disraptorMenuVisible;
+    });
 </script>
