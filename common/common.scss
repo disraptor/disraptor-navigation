@@ -1,15 +1,7 @@
-// Work around for not being able to insert a custom menu at the correct position in the DOM.
-// https://meta.discourse.org/t/add-extra-menu-entry-to-the-correct-location-like-the-hamburger-menu-panel/119364
-.header-cloak {
-  z-index: -1;
-}
-
 .d-header .disraptor-panel {
-    width: 0;
+  width: 0;
 }
 
-// This doesn’t work because of the incorrect position of the menu panel. Don’t uncomment it without that easy being resolved.
-// https://meta.discourse.org/t/add-extra-menu-entry-to-the-correct-location-like-the-hamburger-menu-panel/119364
-// .disraptor-panel .menu-panel.slide-in {
-//     left: 0;
-// }
+.disraptor-panel .menu-panel.slide-in {
+  left: 0;
+}

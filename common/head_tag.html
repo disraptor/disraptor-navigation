@@ -1,6 +1,7 @@
 <script type="text/discourse-plugin" version="0.8">
     const { h } = require('virtual-dom');
     const { iconNode } = require('discourse-common/lib/icon-library');
+    const { attachAdditionalPanel } = require('discourse/widgets/header');
 
     const disraptorMenuItems = [
         {
@@ -42,16 +43,16 @@
             });
         },
 
-        clickOutside(e) {
+        clickOutside(event) {
             if (this.site.mobileView) {
-                this.clickOutsideMobile(e);
+                this.clickOutsideMobile(event);
             } else {
                 this.sendWidgetAction('toggleDisraptorMenu');
             }
         },
 
-        clickOutsideMobile(e) {
-            const centeredElement = document.elementFromPoint(e.clientX, e.clientY);
+        clickOutsideMobile(event) {
+            const centeredElement = document.elementFromPoint(event.clientX, event.clientY);
             if (
                 !centeredElement.classList.contains('header-cloak') &&
                 centeredElement.closest('.panel').length > 0
@@ -66,37 +67,30 @@
                 const headerCloak = document.querySelector('.header-cloak');
                 headerCloak.classList.add('animate');
                 headerCloak.style.setProperty('opacity', 0);
+                console.log('hi')
 
                 Ember.run.later(() => this.sendWidgetAction('toggleDisraptorMenu'), 200);
             }
         }
     });
 
-    api.decorateWidget('header-icons:after', function(helper) {
+    api.decorateWidget('header-icons:after', function (helper) {
         const headerState = helper.widget.parentWidget.state;
 
-        let contents = [];
-        contents.push(helper.attach('header-dropdown', {
+        return helper.attach('header-dropdown', {
           title: 'disraptor-menu',
           icon: 'disraptor-bars',
-          active: headerState.disraptorMenuVisible,
           iconId: 'toggle-disraptor-menu',
+          active: headerState.disraptorMenuVisible,
           action: 'toggleDisraptorMenu',
-        }));
-
-        if (headerState.disraptorMenuVisible) {
-            contents.push(helper.attach('disraptor-menu'));
-        }
-
-        return contents;
+        });
     });
 
     api.attachWidgetAction('header', 'toggleDisraptorMenu', function() {
-        if (this.site.mobileView && this.state.disraptorMenuVisible) {
-            const headerCloak = document.querySelector('.header-cloak');
-            headerCloak.setAttribute('style', '');
-        }
-
         this.state.disraptorMenuVisible = !this.state.disraptorMenuVisible;
+    });
+
+    api.addHeaderPanel('disraptor-menu', 'disraptorMenuVisible', function (attrs, state) {
+        // This callback has to be provided. Don’t know why.
     });
 </script>
