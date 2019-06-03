@@ -87,6 +87,11 @@
     });
 
     api.attachWidgetAction('header', 'toggleDisraptorMenu', function() {
+        if (this.site.mobileView && this.state.disraptorMenuVisible) {
+            const headerCloak = document.querySelector('.header-cloak');
+            headerCloak.setAttribute('style', '');
+        }
+
         this.state.disraptorMenuVisible = !this.state.disraptorMenuVisible;
     });
 </script>
