@@ -24,6 +24,10 @@
     api.createWidget('disraptor-menu', {
         tagName: 'div.disraptor-panel',
 
+        settings: {
+            maxWidth: 320
+        },
+
         panelContents() {
             return h(
                 'ul.disraptor-menu',
@@ -33,7 +37,8 @@
 
         html() {
             return this.attach('menu-panel', {
-                contents: () => this.panelContents()
+                contents: () => this.panelContents(),
+                maxWidth: this.settings.maxWidth
             });
         },
 
